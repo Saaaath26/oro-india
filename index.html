@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oro India - CBSE Class 10 Preparation Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Oro India</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#subjects" class="nav-link">Subjects</a>
+                <a href="#progress" class="nav-link">Progress</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="user-menu">
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-secondary" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                    <button class="btn btn-primary" onclick="showRegisterModal()">
+                        <i class="fas fa-user-plus"></i>
+                        Sign Up
+                    </button>
+                </div>
+                <div class="user-profile" id="userProfile" style="display: none;">
+                    <div class="user-type-selector">
+                        <select id="userType" onchange="changeUserType()">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="parent">Parent</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="user-avatar" onclick="showUserMenu()">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="userName">User</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Master CBSE Class 10 with <span class="gradient-text">AI-Powered Learning</span></h1>
+                <p>Adaptive difficulty levels, personalized summaries, and comprehensive test preparation for Science and Social Science</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">Chapters</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Questions</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Difficulty Levels</span>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSubjects()">
+                        <i class="fas fa-rocket"></i>
+                        Start Learning
+                    </button>
+                    <button class="btn btn-secondary" onclick="showDemo()">
+                        <i class="fas fa-play"></i>
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <div class="card-header">
+                        <div class="card-title">Chapter Progress</div>
+                        <div class="card-subtitle">Science - Light</div>
+                    </div>
+                    <div class="progress-rings">
+                        <div class="progress-ring">
+                            <svg class="progress-ring-svg" width="80" height="80">
+                                <circle class="progress-ring-circle-bg" cx="40" cy="40" r="30"></circle>
+                                <circle class="progress-ring-circle" cx="40" cy="40" r="30" style="stroke-dasharray: 188.4; stroke-dashoffset: 47.1;"></circle>
+                            </svg>
+                            <div class="progress-text">75%</div>
+                        </div>
+                    </div>
+                    <div class="difficulty-badges">
+                        <span class="badge badge-completed">Foundation</span>
+                        <span class="badge badge-completed">Core</span>
+                        <span class="badge badge-current">Advanced</span>
+                        <span class="badge badge-locked">Expert</span>
+                        <span class="badge badge-locked">Master</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subjects Section -->
+    <section id="subjects" class="subjects">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Subject</h2>
+                <p>Start your journey with comprehensive CBSE Class 10 preparation</p>
+            </div>
+            <div class="subjects-grid">
+                <div class="subject-card" onclick="openSubject('science')">
+                    <div class="subject-icon science">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3>Science</h3>
+                    <p>Physics, Chemistry, Biology concepts with interactive learning</p>
+                    <div class="subject-stats">
+                        <span><i class="fas fa-book"></i> 5 Chapters</span>
+                        <span><i class="fas fa-question-circle"></i> 250+ Questions</span>
+                    </div>
+                    <div class="subject-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <span>60% Complete</span>
+                    </div>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('social-science')">
+                    <div class="subject-icon social">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h3>Social Science</h3>
+                    <p>History, Geography, Political Science, and Economics</p>
+                    <div class="subject-stats">
+                        <span><i class="fas fa-book"></i> 5 Chapters</span>
+                        <span><i class="fas fa-question-circle"></i> 250+ Questions</span>
+                    </div>
+                    <div class="subject-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <span>45% Complete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Oro India</h2>
+                <p>Meet our founder and learn about our mission</p>
+            </div>
+            <div class="about-content">
+                <div class="founder-section">
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <img src="founder.jpeg" alt="Deepthi Adiraju - Founder & CEO" />
+                        </div>
+                        <div class="founder-info">
+                            <h3>Deepthi Adiraju</h3>
+                            <div class="founder-title">
+                                <i class="fas fa-award"></i>
+                                <span>Founder & CEO</span>
+                            </div>
+                            <p>Passionate about transforming education through technology and making quality learning accessible to all students across India.</p>
+                            <div class="founder-mission">
+                                <h4>Our Mission</h4>
+                                <p>To revolutionize CBSE education by providing personalized, AI-powered learning experiences that adapt to each student's unique needs and learning pace.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="company-info">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        <h4>Our Vision</h4>
+                        <p>To make quality education accessible to every CBSE student in India through innovative technology and personalized learning approaches.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Our Team</h4>
+                        <p>Built by students from India's top institutes—IIT, IISC, and NIT. We understand the challenges of exam preparation firsthand.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h4>Recognition</h4>
+                        <p>Backed by BITS Pilani Technology Business Incubator, supporting innovation in educational technology.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Oro India?</h2>
+                <p>Advanced features designed for effective CBSE preparation</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Summaries</h3>
+                    <p>Get personalized chapter summaries generated by advanced AI to understand concepts quickly</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>5-Tier Difficulty System</h3>
+                    <p>Progress through Foundation, Core, Advanced, Expert, and Master levels at your own pace</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Dynamic Question Pool</h3>
+                    <p>Never see the same questions twice with our intelligent question rotation system</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your improvement with detailed analytics and performance insights</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Multi-User Support</h3>
+                    <p>Tailored experiences for Students, Teachers, Parents, and Administrators</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Study anywhere, anytime with our mobile-friendly platform</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Oro India</span>
+                    </div>
+                    <p>Empowering CBSE Class 10 students with AI-driven learning solutions</p>
+                    <div class="founder-info">
+                        <p><strong>Founded by:</strong> Deepthi Adiraju</p>
+                        <p>Dedicated to revolutionizing education through technology</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#subjects">Subjects</a></li>
+                        <li><a href="#progress">Progress</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Subjects</h4>
+                    <ul>
+                        <li><a href="#" onclick="openSubject('science')">Science</a></li>
+                        <li><a href="#" onclick="openSubject('social-science')">Social Science</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@edumaster.com</li>
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-map-marker-alt"></i> India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Oro India. All rights reserved. | Designed for CBSE Class 10 Excellence</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Subject Modal -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalSubjectTitle">Science Chapters</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="chaptersContainer" class="chapters-grid">
+                    <!-- Chapters will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Detail Modal -->
+    <div id="chapterModal" class="modal">
+        <div class="modal-content chapter-modal">
+            <div class="modal-header">
+                <h2 id="chapterTitle">Chapter Title</h2>
+                <span class="close" onclick="closeChapterModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="chapter-content">
+                    <div class="chapter-summary">
+                        <h3><i class="fas fa-brain"></i> AI-Generated Summary</h3>
+                        <div id="chapterSummary" class="summary-content">
+                            <div class="loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                Generating personalized summary...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="difficulty-levels">
+                        <h3><i class="fas fa-layer-group"></i> Difficulty Levels</h3>
+                        <div class="levels-grid" id="difficultyLevels">
+                            <!-- Difficulty levels will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Modal -->
+    <div id="testModal" class="modal">
+        <div class="modal-content test-modal">
+            <div class="modal-header">
+                <h2 id="testTitle">Test - Foundation Level</h2>
+                <div class="test-info">
+                    <span id="testTimer">15:00</span>
+                    <span id="testProgress">1/10</span>
+                </div>
+                <span class="close" onclick="closeTestModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="testContent" class="test-content">
+                    <!-- Test questions will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <h2>Welcome Back to Oro India</h2>
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-form">
+                    <div class="google-signin">
+                        <button class="btn btn-google" onclick="signInWithGoogle()">
+                            <i class="fab fa-google"></i>
+                            Continue with Google
+                        </button>
+                    </div>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="loginPassword" required placeholder="Enter your password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rememberMe">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </button>
+                    </form>
+                    <div class="auth-switch">
+                        <p>Don't have an account? <a href="#" onclick="switchToRegister()">Sign up here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <h2>Join Oro India</h2>
+                <span class="close" onclick="closeRegisterModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-form">
+                    <div class="google-signin">
+                        <button class="btn btn-google" onclick="signUpWithGoogle()">
+                            <i class="fab fa-google"></i>
+                            Sign up with Google
+                        </button>
+                    </div>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    <form id="registerForm" onsubmit="handleRegister(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" required placeholder="First name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" required placeholder="Last name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email Address</label>
+                            <input type="email" id="registerEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="registerPassword" required placeholder="Create a password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <div class="password-input">
+                                <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">I am a:</label>
+                            <select id="userRole" required>
+                                <option value="">Select your role</option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="parent">Parent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="schoolName">School Name (Optional)</label>
+                            <input type="text" id="schoolName" placeholder="Enter your school name">
+                        </div>
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span>I agree to the <a href="#" onclick="showTerms()">Terms of Service</a> and <a href="#" onclick="showPrivacy()">Privacy Policy</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </button>
+                    </form>
+                    <div class="auth-switch">
+                        <p>Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <h2>Verify Your Email</h2>
+                <span class="close" onclick="closeOtpModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-form">
+                    <div class="otp-info">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <p>We've sent a verification code to <strong id="otpEmail"></strong></p>
+                        <p class="otp-subtitle">Enter the 6-digit code below</p>
+                    </div>
+                    <form id="otpForm" onsubmit="handleOtpVerification(event)">
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-check"></i>
+                            Verify Email
+                        </button>
+                    </form>
+                    <div class="otp-resend">
+                        <p>Didn't receive the code? <a href="#" onclick="resendOtp()">Resend OTP</a></p>
+                        <div class="resend-timer" id="resendTimer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="script.js"></script>
+</body>
+</html>
