@@ -8,7 +8,7 @@ let currentTest = null;
 let userProgress = {};
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = window.location.origin + '/api';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
