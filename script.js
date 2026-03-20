@@ -30,7 +30,7 @@ function debugGoogleSetup() {
     if (typeof google !== 'undefined' && google.accounts) {
         try {
             google.accounts.id.initialize({
-                client_id: '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com',
+                client_id: '44528732073-734qbcn9e4hf3brpjdrbm78ksq3vbe6d.apps.googleusercontent.com',
                 callback: (response) => console.log('Test callback received:', response)
             });
             console.log('✅ Test initialization successful');
@@ -99,7 +99,7 @@ function initializeGoogleSignIn() {
     if (typeof google !== 'undefined' && google.accounts) {
         try {
             google.accounts.id.initialize({
-                client_id: '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com',
+                client_id: '44528732073-734qbcn9e4hf3brpjdrbm78ksq3vbe6d.apps.googleusercontent.com',
                 callback: handleGoogleSignIn,
                 auto_select: false,
                 cancel_on_tap_outside: true,
