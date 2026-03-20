@@ -19,6 +19,30 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(initializeGoogleSignIn, 500);
 });
 
+// Debug Google Setup
+function debugGoogleSetup() {
+    console.log('🔍 Debugging Google Setup:');
+    console.log('- Google object exists:', typeof google !== 'undefined');
+    console.log('- Google accounts exists:', typeof google !== 'undefined' && !!google.accounts);
+    console.log('- Client ID configured:', '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com');
+    console.log('- Current origin:', window.location.origin);
+    
+    if (typeof google !== 'undefined' && google.accounts) {
+        try {
+            google.accounts.id.initialize({
+                client_id: '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com',
+                callback: (response) => console.log('Test callback received:', response)
+            });
+            console.log('✅ Test initialization successful');
+        } catch (error) {
+            console.error('❌ Test initialization failed:', error);
+        }
+    }
+}
+
+// Call debug function after page load
+setTimeout(debugGoogleSetup, 2000);
+
 // Authentication Management
 async function checkAuthStatus() {
     try {
@@ -70,34 +94,57 @@ function showUserProfile() {
 
 // Google Sign-In Integration
 function initializeGoogleSignIn() {
-    if (typeof google !== 'undefined') {
-        google.accounts.id.initialize({
-            client_id: '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com',
-            callback: handleGoogleSignIn,
-            auto_select: false,
-            cancel_on_tap_outside: true
-        });
-        console.log('✅ Google Sign-In initialized successfully');
+    console.log('🔄 Initializing Google Sign-In...');
+    
+    if (typeof google !== 'undefined' && google.accounts) {
+        try {
+            google.accounts.id.initialize({
+                client_id: '574699898187-aupgiulfsf8ag6r092f33g6vucifof3h.apps.googleusercontent.com',
+                callback: handleGoogleSignIn,
+                auto_select: false,
+                cancel_on_tap_outside: true,
+                ux_mode: 'popup'
+            });
+            console.log('✅ Google Sign-In initialized successfully');
+        } catch (error) {
+            console.error('❌ Google Sign-In initialization error:', error);
+        }
     } else {
-        console.log('⏳ Google Sign-In library not loaded yet');
+        console.log('⏳ Google Sign-In library not loaded yet, retrying...');
         // Retry after a short delay
         setTimeout(initializeGoogleSignIn, 1000);
     }
 }
 
 function signInWithGoogle() {
-    if (typeof google !== 'undefined') {
+    console.log('🔄 Starting Google Sign-In...');
+    
+    if (typeof google === 'undefined' || !google.accounts) {
+        showError('Google Sign-In is still loading. Please wait a moment and try again.');
+        return;
+    }
+    
+    try {
         google.accounts.id.prompt((notification) => {
+            console.log('Google prompt notification:', notification);
+            
             if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                // Fallback to popup if prompt is not displayed
+                console.log('Prompt not displayed, trying direct sign-in...');
+                // Try alternative approach
                 google.accounts.id.renderButton(
                     document.createElement('div'),
-                    { theme: 'outline', size: 'large' }
+                    { 
+                        theme: 'outline', 
+                        size: 'large',
+                        type: 'standard',
+                        text: 'signin_with'
+                    }
                 );
             }
         });
-    } else {
-        showError('Google Sign-In is loading. Please try again in a moment.');
+    } catch (error) {
+        console.error('❌ Google Sign-In error:', error);
+        showError('Google authentication failed: ' + error.message);
     }
 }
 
@@ -106,8 +153,14 @@ function signUpWithGoogle() {
 }
 
 async function handleGoogleSignIn(response) {
+    console.log('🔄 Processing Google Sign-In response...');
+    
     try {
-        console.log('Google Sign-In response received');
+        if (!response.credential) {
+            throw new Error('No credential received from Google');
+        }
+        
+        console.log('Sending credential to backend...');
         
         // Send credential to backend for verification
         const backendResponse = await fetch(`${API_BASE_URL}/auth/google`, {
@@ -122,6 +175,7 @@ async function handleGoogleSignIn(response) {
         });
         
         const data = await backendResponse.json();
+        console.log('Backend response:', data);
         
         if (data.success) {
             currentUser = data.user;
@@ -132,12 +186,14 @@ async function handleGoogleSignIn(response) {
             closeRegisterModal();
             showUserProfile();
             showWelcomeMessage();
+            console.log('✅ Google authentication successful');
         } else {
+            console.error('❌ Backend authentication failed:', data.error);
             showError(data.error || 'Google authentication failed');
         }
     } catch (error) {
-        console.error('Google Sign-In error:', error);
-        showError('Google authentication failed. Please try again.');
+        console.error('❌ Google Sign-In error:', error);
+        showError('Google authentication failed: ' + error.message);
     }
 }
 
