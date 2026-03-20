@@ -2,9 +2,47 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-const { query } = require('../config/database');
+const { query, initializeTables } = require('../config/database');
 const { sendOTPEmail, sendWelcomeEmail } = require('../config/email');
 const router = express.Router();
+
+// Database initialization endpoint (for production setup)
+router.post('/init-db', async (req, res) => {
+    try {
+        console.log('🚀 Initializing database tables...');
+        await initializeTables();
+        res.json({
+            success: true,
+            message: 'Database initialized successfully'
+        });
+    } catch (error) {
+        console.error('❌ Database initialization error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Database initialization failed',
+            details: error.message
+        });
+    }
+});
+
+// Database health check endpoint
+router.get('/health', async (req, res) => {
+    try {
+        const result = await query('SELECT NOW() as current_time');
+        res.json({
+            success: true,
+            message: 'Database connection healthy',
+            timestamp: result.rows[0].current_time
+        });
+    } catch (error) {
+        console.error('❌ Database health check failed:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Database connection failed',
+            details: error.message
+        });
+    }
+});
 
 // Generate OTP
 const generateOTP = () => {
@@ -69,15 +107,24 @@ router.post('/send-otp', async (req, res) => {
 // Register endpoint
 router.post('/register', async (req, res) => {
     try {
+        console.log('📝 Registration attempt:', { 
+            email: req.body.email, 
+            role: req.body.role,
+            hasOTP: !!req.body.otp 
+        });
+        
         const { firstName, lastName, email, password, role, schoolName, otp } = req.body;
 
         // Validate required fields
         if (!firstName || !lastName || !email || !password || !role || !otp) {
+            console.log('❌ Missing required fields:', { firstName: !!firstName, lastName: !!lastName, email: !!email, password: !!password, role: !!role, otp: !!otp });
             return res.status(400).json({
                 success: false,
                 error: 'All fields are required'
             });
         }
+
+        console.log('🔍 Verifying OTP for:', email);
 
         // Verify OTP
         const otpRecord = await query(
@@ -86,11 +133,14 @@ router.post('/register', async (req, res) => {
         );
 
         if (otpRecord.rows.length === 0) {
+            console.log('❌ Invalid or expired OTP for:', email);
             return res.status(400).json({
                 success: false,
                 error: 'Invalid or expired OTP'
             });
         }
+
+        console.log('✅ OTP verified, checking existing user');
 
         // Check if user already exists
         const existingUser = await query(
@@ -99,14 +149,19 @@ router.post('/register', async (req, res) => {
         );
 
         if (existingUser.rows.length > 0) {
+            console.log('❌ User already exists:', email);
             return res.status(409).json({
                 success: false,
                 error: 'User with this email already exists'
             });
         }
 
+        console.log('🔐 Hashing password');
+
         // Hash password
         const passwordHash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 12);
+
+        console.log('👤 Creating user');
 
         // Create user
         const newUser = await query(
@@ -117,6 +172,9 @@ router.post('/register', async (req, res) => {
         );
 
         const user = newUser.rows[0];
+        console.log('✅ User created with ID:', user.id);
+
+        console.log('📊 Initializing user progress');
 
         // Initialize user progress for all subjects and chapters
         const subjects = ['science', 'social-science'];
@@ -135,8 +193,12 @@ router.post('/register', async (req, res) => {
             }
         }
 
+        console.log('✅ User progress initialized');
+
         // Delete used OTP
         await query('DELETE FROM otp_storage WHERE email = $1', [email]);
+
+        console.log('🔑 Generating JWT token');
 
         // Generate JWT token
         const token = jwt.sign(
@@ -156,6 +218,8 @@ router.post('/register', async (req, res) => {
         // Send welcome email (non-blocking)
         sendWelcomeEmail(email, user.name).catch(console.error);
 
+        console.log('✅ Registration completed successfully for:', email);
+
         res.status(201).json({
             success: true,
             message: 'Registration successful',
@@ -167,6 +231,22 @@ router.post('/register', async (req, res) => {
                 schoolName: user.school_name
             }
         });
+
+    } catch (error) {
+        console.error('❌ Registration error:', error);
+        console.error('Error details:', {
+            message: error.message,
+            code: error.code,
+            detail: error.detail
+        });
+        
+        res.status(500).json({
+            success: false,
+            error: 'Registration failed. Please try again.',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
 
     } catch (error) {
         console.error('Registration error:', error);
